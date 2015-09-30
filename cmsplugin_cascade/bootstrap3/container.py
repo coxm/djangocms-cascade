@@ -218,8 +218,15 @@ class BootstrapColumnPlugin(BootstrapPluginBase):
                         initial='', label=label, help_text=help_text))
 
                 # handle offset
-                choices = (('', _("No offset")),) + \
-                    tuple(('col-{}-offset-{}'.format(bp, i), units[i]) for i in range(1, 12))
+                if breakpoints.index(bp) == 0:
+                    choices = (('', _("No offset")),)
+                else:
+                    # Allow users to inherit offset or reset it.
+                    choices = (
+                        ('', _("Inherit from above")),
+                        ('col-{}-offset-0'.format(bp), _("No offset"))
+                    )
+                choices += tuple(('col-{}-offset-{}'.format(bp, i), units[i]) for i in range(1, 12))
                 label = _("Offset for {}").format(devices)
                 help_text = chose_help_text(
                     _("Number of offset units for devices narrower than {} pixels."),
